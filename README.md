@@ -7,7 +7,7 @@
 ## Quick setup
 ### Necessary steps (start here after a reset)
 ```
-cd docker-ha-dev
+cd mattermost-docker-ha-dev
 mkdir -p volumes/app/mattermost/{config{1,2,3},data{1,2,3},logs{1,2,3},plugins{1,2,3}}
 sudo chown -R 2000:2000 volumes/app
 ```
@@ -27,6 +27,8 @@ or upload your own E20 license. Enter the *High Availability* tab and enable it.
 config with the button at the bottom. Return to your terminal.
 
 ### Necessary restart of Mattermost
+In case you kept the containers in the foreground press Ctrl-c otherwise use the `down` command and start again all
+containers.
 ```
 sudo docker-compose down
 sudo docker-compose up -d
