@@ -1,4 +1,4 @@
-# Mattermost Docker setup
+# Mattermost Docker High Availability setup for development
 
 ## Prequisites
 1. A Docker installation is needed (https://docs.docker.com/engine/install/)
