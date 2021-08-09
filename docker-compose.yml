@@ -1,0 +1,124 @@
+# https://docs.docker.com/compose/environment-variables/
+
+version: "2.4"
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: true
+    tmpfs:
+      - /var/run
+      - /var/cache/nginx
+      - /var/log/nginx
+    volumes:
+      - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d:Z
+    ports:
+      - ${HTTP_PORT}:80
+    environment:
+      # timezone inside container
+      - TZ
+
+  postgres:
+    container_name: postgres-mattermost
+    image: postgres:${POSTGRES_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data:Z
+    environment:
+      # timezone inside container
+      - TZ
+
+      # necessay Postgres options/variables
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+
+  mattermost1:
+    container_name: mattermost1
+    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    tmpfs:
+      - /tmp
+    volumes:
+      - ${MATTERMOST_CONFIG_PATH}1:/mattermost/config:Z
+      - ${MATTERMOST_DATA_PATH}1:/mattermost/data:Z
+      - ${MATTERMOST_LOGS_PATH}1:/mattermost/logs:Z
+      - ${MATTERMOST_PLUGINS_PATH}1:/mattermost/plugins:Z
+      - ${MATTERMOST_CLIENT_PLUGINS_PATH}1:/mattermost/client/plugins:Z
+    environment:
+      # timezone inside container
+      - TZ
+
+      # necessary Mattermost options/variables (see env.example)
+      - MM_SERVICESETTINGS_SITEURL
+      - MM_SERVICESETTINGS_LISTENADDRESS=0.0.0.0:8064
+      - MM_SQLSETTINGS_DRIVERNAME
+      - MM_SQLSETTINGS_DATASOURCE
+      - MM_CONFIG=${MM_SQLSETTINGS_DATASOURCE}
+
+  mattermost2:
+    container_name: mattermost2
+    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    tmpfs:
+      - /tmp
+    volumes:
+      - ${MATTERMOST_CONFIG_PATH}2:/mattermost/config:Z
+      - ${MATTERMOST_DATA_PATH}2:/mattermost/data:Z
+      - ${MATTERMOST_LOGS_PATH}2:/mattermost/logs:Z
+      - ${MATTERMOST_PLUGINS_PATH}2:/mattermost/plugins:Z
+      - ${MATTERMOST_CLIENT_PLUGINS_PATH}2:/mattermost/client/plugins:Z
+    environment:
+      # timezone inside container
+      - TZ
+
+      # necessary Mattermost options/variables (see env.example)
+      - MM_SERVICESETTINGS_SITEURL
+      - MM_SERVICESETTINGS_LISTENADDRESS=0.0.0.0:8065
+      - MM_SQLSETTINGS_DRIVERNAME
+      - MM_SQLSETTINGS_DATASOURCE
+      - MM_CONFIG=${MM_SQLSETTINGS_DATASOURCE}
+
+  mattermost3:
+    container_name: mattermost3
+    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    tmpfs:
+      - /tmp
+    volumes:
+      - ${MATTERMOST_CONFIG_PATH}3:/mattermost/config:Z
+      - ${MATTERMOST_DATA_PATH}3:/mattermost/data:Z
+      - ${MATTERMOST_LOGS_PATH}3:/mattermost/logs:Z
+      - ${MATTERMOST_PLUGINS_PATH}3:/mattermost/plugins:Z
+      - ${MATTERMOST_CLIENT_PLUGINS_PATH}3:/mattermost/client/plugins:Z
+    environment:
+      # timezone inside container
+      - TZ
+
+      # necessary Mattermost options/variables (see env.example)
+      - MM_SERVICESETTINGS_SITEURL
+      - MM_SERVICESETTINGS_LISTENADDRESS=0.0.0.0:8066
+      - MM_SQLSETTINGS_DRIVERNAME
+      - MM_SQLSETTINGS_DATASOURCE
+      - MM_CONFIG=${MM_SQLSETTINGS_DATASOURCE}
